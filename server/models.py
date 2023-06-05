@@ -3,6 +3,7 @@ from config import db
 
 # User model
 class User(db.Model, SerializerMixin):
+    __tablename__ = 'user'  # Update the table name to 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
@@ -11,8 +12,8 @@ class User(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
     # Relationships
-    workout_progress = db.relationship('WorkoutProgress', backref='user', lazy=True)
-    favorite_workouts = db.relationship('FavoriteWorkout', backref='user', lazy=True)
+    workout_progress = db.relationship('WorkoutProgress', backref='user_wp', lazy=True)
+    favorite_workouts = db.relationship('FavoriteWorkout', backref='user_fw', lazy=True)
 
 # WorkoutPlan model
 class WorkoutPlan(db.Model, SerializerMixin):
@@ -23,8 +24,8 @@ class WorkoutPlan(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
     # Relationships
-    exercises = db.relationship('Exercise', backref='workout_plan', lazy=True)
-    favorite_workouts = db.relationship('FavoriteWorkout', backref='workout_plan', lazy=True)
+    exercises = db.relationship('Exercise', backref='workout_exercises', lazy=True)
+    favorite_workouts = db.relationship('FavoriteWorkout', backref='workout_fav', lazy=True)
 
 # Exercise model
 class Exercise(db.Model, SerializerMixin):
@@ -38,8 +39,8 @@ class Exercise(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
     # Relationships
-    workout_plan = db.relationship('WorkoutPlan', backref=db.backref('exercises', order_by=id), lazy=True)
-    workout_progress = db.relationship('WorkoutProgress', backref='exercise', lazy=True)
+    workout_plan_rel = db.relationship('WorkoutPlan', backref='exercise_list', lazy=True)
+    workout_progress = db.relationship('WorkoutProgress', backref='exercise', lazy='dynamic')
 
 # WorkoutProgress model
 class WorkoutProgress(db.Model, SerializerMixin):
@@ -55,8 +56,8 @@ class WorkoutProgress(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
     # Relationships
-    user = db.relationship('User', backref=db.backref('workout_progress', order_by=id), lazy=True)
-    exercise = db.relationship('Exercise', backref=db.backref('workout_progress', order_by=id), lazy=True)
+    user_rel = db.relationship('User', backref=db.backref('workout_progress_rel', order_by=id), lazy=True)
+    exercise_rel = db.relationship('Exercise', lazy=True)
 
 # FavoriteWorkout model
 class FavoriteWorkout(db.Model, SerializerMixin):
@@ -67,5 +68,5 @@ class FavoriteWorkout(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
     # Relationships
-    user = db.relationship('User', backref=db.backref('favorite_workouts', order_by=id), lazy=True)
-    workout_plan = db.relationship('WorkoutPlan', backref=db.backref('favorite_workouts', order_by=id), lazy=True)
+    user_rel = db.relationship('User', backref=db.backref('favorite_workouts_user_rel', order_by=id), lazy=True)
+    workout_plan_rel = db.relationship('WorkoutPlan', backref=db.backref('favorite_workouts_rel', order_by=id), lazy=True)
