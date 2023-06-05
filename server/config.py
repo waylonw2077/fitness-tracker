@@ -29,3 +29,10 @@ api = Api(app)
 
 # Instantiate CORS
 CORS(app)
+
+# Configure CORS
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+# Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*"}})
+
