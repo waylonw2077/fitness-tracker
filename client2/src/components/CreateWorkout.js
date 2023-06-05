@@ -24,7 +24,7 @@ function CreateWorkout() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (response.ok) {
+        if (data.ok) {
           setMessage(data.message);
           setTitle("");
           setDescription("");
