@@ -19,7 +19,6 @@ function ProgressTracker() {
     // Send a request to the API to mark the exercise as completed for the user
     // You can use the workoutId and exerciseId to identify the specific exercise
 
-    // Example code:
     fetch(`/workout-plans/${workoutId}/exercises/${exerciseId}/complete`, {
       method: "POST",
       // Additional request options (e.g., headers, body) can be added here
