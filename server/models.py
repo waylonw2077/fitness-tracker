@@ -11,6 +11,8 @@ class User(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
+    # def to_dict(self):
+    #     return{}
     # Relationships
     workout_progress = db.relationship('WorkoutProgress', backref='user_wp', lazy=True)
     favorite_workouts = db.relationship('FavoriteWorkout', backref='user_fw', lazy=True)
