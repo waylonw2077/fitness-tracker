@@ -9,25 +9,13 @@ from config import app, db, api
 from models import User, WorkoutPlan, Exercise, WorkoutProgress, FavoriteWorkout
 
 # Routes
-
 # User endpoints
-
-
-class UserResource(Resource):
+class UserIdResource(Resource):
     def get(self, user_id):
         user = User.query.get(user_id)
         if user:
             return user.to_dict()
         return {'message': 'User not found'}, 404
-
-    def post(self):
-        # Create a new user based on the request data
-        data = request.get_json()
-        user = User(username=data['username'],
-                    email=data['email'], password=data['password'])
-        db.session.add(user)
-        db.session.commit()
-        return {'message': 'User created successfully'}, 201
 
     def put(self, user_id):
         # Update user profile
@@ -49,6 +37,16 @@ class UserResource(Resource):
             db.session.commit()
             return {'message': 'User deleted successfully'}
         return {'message': 'User not found'}, 404
+    
+class UserResource(Resource):
+    def post(self):
+        # Create a new user based on the request data
+        data = request.get_json()
+        user = User(username=data['username'],
+                    email=data['email'], password=data['password'])
+        db.session.add(user)
+        db.session.commit()
+        return {'message': 'User created successfully'}, 201
 
 
 class UserRegistrationResource(Resource):
@@ -79,31 +77,18 @@ class UserLoginResource(Resource):
         return {'message': 'Invalid username or password'}, 401
 
 
-api.add_resource(UserResource, '/users', '/users/<int:user_id>')
+api.add_resource(UserIdResource, '/users/<int:user_id>')
+api.add_resource(UserResource, '/users')
 api.add_resource(UserRegistrationResource, '/register')
 api.add_resource(UserLoginResource, '/login')
 
 # WorkoutPlan endpoints
-
-
 class WorkoutPlanIdResource(Resource):
     def get(self, workout_plan_id):
         workout_plan = WorkoutPlan.query.get(workout_plan_id)
         if workout_plan:
             return workout_plan.to_dict()
         return {'message': 'Workout plan not found'}, 404
-
-    # def post(self):
-    #     print("POST request received")
-    #     # Create a new workout plan based on the request data
-    #     data = request.get_json()
-    #     print("Received data:", data)
-    #     workout_plan = WorkoutPlan(
-    #         title=data['title'], description=data['description'])
-    #     db.session.add(workout_plan)
-    #     db.session.commit()
-    #     print("Workout plan created successfully")
-    #     return {'message': 'Workout plan created successfully'}, 201
 
     def put(self, workout_plan_id):
         print("PUT request received for workout plan ID:", workout_plan_id)
@@ -149,8 +134,10 @@ class WorkoutPlanResource(Resource):
         print("Received data:", data)
         workout_plan = WorkoutPlan(
             title=data['title'], description=data['description'])
+        
         db.session.add(workout_plan)
         db.session.commit()
+
         print("Workout plan created successfully")
         return {'message': 'Workout plan created successfully'}, 201
     
@@ -158,9 +145,7 @@ api.add_resource(WorkoutPlanResource, '/workout-plans')
 
 
 # Exercise endpoints
-
-
-class ExerciseResource(Resource):
+class ExerciseIdResource(Resource):
     def get(self, exercise_id):
         # Get exercise by ID
         exercise = Exercise.query.get(exercise_id)
@@ -168,14 +153,14 @@ class ExerciseResource(Resource):
             return exercise.to_dict()
         return {'message': 'Exercise not found'}, 404
 
-    def post(self):
-        # Create a new exercise
-        data = request.get_json()
-        exercise = Exercise(
-            title=data['title'], description=data['description'], sets=data['sets'], reps=data['reps'])
-        db.session.add(exercise)
-        db.session.commit()
-        return {'message': 'Exercise created successfully'}, 201
+    # def post(self):
+    #     # Create a new exercise
+    #     data = request.get_json()
+    #     exercise = Exercise(
+    #         title=data['title'], description=data['description'], sets=data['sets'], reps=data['reps'])
+    #     db.session.add(exercise)
+    #     db.session.commit()
+    #     return {'message': 'Exercise created successfully'}, 201
 
     def put(self, exercise_id):
         # Update exercise details
@@ -200,14 +185,28 @@ class ExerciseResource(Resource):
             return {'message': 'Exercise deleted successfully'}
         return {'message': 'Exercise not found'}, 404
 
+api.add_resource(ExerciseIdResource,
+                '/exercises/<int:exercise_id>')
 
-api.add_resource(ExerciseResource, '/exercises',
-                 '/exercises/<int:exercise_id>')
+class ExerciseResource(Resource):
+    def get(self):
+        exercise = Exercise.query.all()
+        return [plan.to_dict() for plan in exercise]
+
+    def post(self):
+        # Create a new exercise
+        data = request.get_json()
+        exercise = Exercise(
+            title=data['title'], description=data['description'], sets=data['sets'], reps=data['reps'])
+        db.session.add(exercise)
+        db.session.commit()
+        return {'message': 'Exercise created successfully'}, 201
+    
+api.add_resource(ExerciseResource, '/exercises')
+
 
 # WorkoutProgress endpoints
-
-
-class WorkoutProgressResource(Resource):
+class WorkoutProgressIdResource(Resource):
     def get(self, progress_id):
         # Get workout progress by ID
         progress = WorkoutProgress.query.get(progress_id)
@@ -215,14 +214,14 @@ class WorkoutProgressResource(Resource):
             return progress.to_dict()
         return {'message': 'Workout progress not found'}, 404
 
-    def post(self):
-        # Log workout progress
-        data = request.get_json()
-        progress = WorkoutProgress(date=data['date'], duration=data['duration'],
-                                   sets_completed=data['sets_completed'], reps_completed=data['reps_completed'])
-        db.session.add(progress)
-        db.session.commit()
-        return {'message': 'Workout progress logged successfully'}, 201
+    # def post(self):
+    #     # Log workout progress
+    #     data = request.get_json()
+    #     progress = WorkoutProgress(date=data['date'], duration=data['duration'],
+    #                                sets_completed=data['sets_completed'], reps_completed=data['reps_completed'])
+    #     db.session.add(progress)
+    #     db.session.commit()
+    #     return {'message': 'Workout progress logged successfully'}, 201
 
     def put(self, progress_id):
         # Update workout progress details
@@ -248,13 +247,29 @@ class WorkoutProgressResource(Resource):
         return {'message': 'Workout progress not found'}, 404
 
 
-api.add_resource(WorkoutProgressResource, '/workout-progress',
-                 '/workout-progress/<int:progress_id>')
+api.add_resource(WorkoutProgressIdResource,
+                '/workout-progress/<int:progress_id>')
+
+class WorkoutProgressResource(Resource):
+    def get(self):
+        wp = WorkoutProgressResource.query.all()
+        return [plan.to_dict() for plan in wp]
+    
+    def post(self):
+        # Log workout progress
+        data = request.get_json()
+        progress = WorkoutProgress(date=data['date'], duration=data['duration'],
+                                sets_completed=data['sets_completed'], reps_completed=data['reps_completed'])
+        db.session.add(progress)
+        db.session.commit()
+        return {'message': 'Workout progress logged successfully'}, 201
+    
+api.add_resource(WorkoutProgressResource,
+                '/workout-progress')
 
 
 # Favorites endpoints
-
-class FavoritesResource(Resource):
+class FavoritesIdResource(Resource):
     def get(self, user_id):
         # Fetch the favorite workouts for the specified user from the database
         user = User.query.get(user_id)
@@ -263,14 +278,6 @@ class FavoritesResource(Resource):
             return [workout.to_dict() for workout in favorite_workouts]
         return {'message': 'User not found'}, 404
 
-    def post(self):
-        # Mark workout as favorite
-        data = request.get_json()
-        favorite = FavoriteWorkout(
-            workout_id=data['workout_id'], user_id=data['user_id'])
-        db.session.add(favorite)
-        db.session.commit()
-        return {'message': 'Workout marked as favorite successfully'}, 201
 
     def delete(self, user_id, favorite_id):
         # Remove workout from favorites for the specified user
@@ -283,7 +290,24 @@ class FavoritesResource(Resource):
         return {'message': 'Favorite workout not found'}, 404
 
 
-api.add_resource(FavoritesResource, '/favorites/<int:user_id>')
+api.add_resource(FavoritesIdResource, '/favorites/<int:user_id>')
+
+class FavoritesResource(Resource):
+    def get(self):
+        favorite = WorkoutProgressResource.query.all()
+        return [favorites.to_dict() for favorites in favorite]
+    
+    def post(self):
+        # Mark workout as favorite
+        data = request.get_json()
+        favorite = FavoriteWorkout(
+            workout_id=data['workout_id'], user_id=data['user_id'])
+        db.session.add(favorite)
+        db.session.commit()
+        return {'message': 'Workout marked as favorite successfully'}, 201
+    
+api.add_resource(FavoritesResource, '/favorites')
+
 
 # Main entry point
 if __name__ == '__main__':
