@@ -86,46 +86,76 @@ api.add_resource(UserLoginResource, '/login')
 # WorkoutPlan endpoints
 
 
-class WorkoutPlanResource(Resource):
+class WorkoutPlanIdResource(Resource):
     def get(self, workout_plan_id):
         workout_plan = WorkoutPlan.query.get(workout_plan_id)
         if workout_plan:
             return workout_plan.to_dict()
         return {'message': 'Workout plan not found'}, 404
 
-    def post(self):
-        # Create a new workout plan based on the request data
-        data = request.get_json()
-        workout_plan = WorkoutPlan(
-            title=data['title'], description=data['description'])
-        db.session.add(workout_plan)
-        db.session.commit()
-        return {'message': 'Workout plan created successfully'}, 201
+    # def post(self):
+    #     print("POST request received")
+    #     # Create a new workout plan based on the request data
+    #     data = request.get_json()
+    #     print("Received data:", data)
+    #     workout_plan = WorkoutPlan(
+    #         title=data['title'], description=data['description'])
+    #     db.session.add(workout_plan)
+    #     db.session.commit()
+    #     print("Workout plan created successfully")
+    #     return {'message': 'Workout plan created successfully'}, 201
 
     def put(self, workout_plan_id):
+        print("PUT request received for workout plan ID:", workout_plan_id)
         # Update workout plan details
         workout_plan = WorkoutPlan.query.get(workout_plan_id)
         if workout_plan:
+            print("Workout plan found:", workout_plan.to_dict())
             data = request.get_json()
+            print("Received data:", data)
             workout_plan.title = data['title']
             workout_plan.description = data['description']
             # Update other workout plan fields as needed
             db.session.commit()
+            print("Workout plan updated successfully")
             return {'message': 'Workout plan updated successfully'}
+        print("Workout plan not found")
         return {'message': 'Workout plan not found'}, 404
 
     def delete(self, workout_plan_id):
+        print("DELETE request received for workout plan ID:", workout_plan_id)
         # Delete workout plan
         workout_plan = WorkoutPlan.query.get(workout_plan_id)
         if workout_plan:
+            print("Workout plan found:", workout_plan.to_dict())
             db.session.delete(workout_plan)
             db.session.commit()
+            print("Workout plan deleted successfully")
             return {'message': 'Workout plan deleted successfully'}
+        print("Workout plan not found")
         return {'message': 'Workout plan not found'}, 404
 
+api.add_resource(WorkoutPlanIdResource, '/workout-plans/<int:workout_plan_id>')
 
-api.add_resource(WorkoutPlanResource, '/workout-plans',
-                 '/workout-plans/<int:workout_plan_id>')
+class WorkoutPlanResource(Resource):
+    def get(self):
+        workout_plans = WorkoutPlan.query.all()
+        return [plan.to_dict() for plan in workout_plans]
+
+    def post(self):
+        print("POST request received")
+        # Create a new workout plan based on the request data
+        data = request.get_json()
+        print("Received data:", data)
+        workout_plan = WorkoutPlan(
+            title=data['title'], description=data['description'])
+        db.session.add(workout_plan)
+        db.session.commit()
+        print("Workout plan created successfully")
+        return {'message': 'Workout plan created successfully'}, 201
+    
+api.add_resource(WorkoutPlanResource, '/workout-plans')
+
 
 # Exercise endpoints
 
