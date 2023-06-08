@@ -32,7 +32,6 @@ import Login from "./components/Login";
 import WorkoutPlans from "./components/WorkoutPlans";
 import CreateWorkout from "./components/CreateWorkout";
 import ProgressTracker from "./components/ProgressTracker";
-import Favorites from "./components/Favorites";
 import './App.css'
 
 
@@ -48,7 +47,6 @@ function App() {
         <Route path="/workout-plans" component={WorkoutPlans} />
         <Route path="/create-workout" component={CreateWorkout} />
         <Route path="/progress-tracker" component={ProgressTracker} />
-        <Route path="/favorites" component={Favorites} />
       </Switch>
     </div>
   );

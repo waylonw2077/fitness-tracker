@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function CreateWorkout() {
   const [title, setTitle] = useState("");
@@ -24,7 +25,7 @@ function CreateWorkout() {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.ok) {
+        if (data.message === "Workout plan created successfully") {
           setMessage(data.message);
           setTitle("");
           setDescription("");
@@ -58,6 +59,7 @@ function CreateWorkout() {
           ></textarea>
         </div>
         <button type="submit">Create</button>
+        <Link to="/workout-plans">Back to Workout Plans</Link>
       </form>
     </div>
   );

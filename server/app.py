@@ -268,7 +268,6 @@ api.add_resource(WorkoutProgressResource,
                 '/workout-progress')
 
 
-# Favorites endpoints
 class FavoritesIdResource(Resource):
     def get(self, user_id):
         # Fetch the favorite workouts for the specified user from the database
@@ -282,7 +281,7 @@ class FavoritesIdResource(Resource):
     def delete(self, user_id, favorite_id):
         # Remove workout from favorites for the specified user
         favorite = FavoriteWorkout.query.filter_by(
-            user_id=user_id, id=favorite_id).first()
+            user_id=user_id, workout_id=favorite_id).first()
         if favorite:
             db.session.delete(favorite)
             db.session.commit()
@@ -294,8 +293,8 @@ api.add_resource(FavoritesIdResource, '/favorites/<int:user_id>')
 
 class FavoritesResource(Resource):
     def get(self):
-        favorite = WorkoutProgressResource.query.all()
-        return [favorites.to_dict() for favorites in favorite]
+        favorites = FavoriteWorkout.query.all()
+        return [favorite.to_dict() for favorite in favorites]
     
     def post(self):
         # Mark workout as favorite
@@ -307,7 +306,6 @@ class FavoritesResource(Resource):
         return {'message': 'Workout marked as favorite successfully'}, 201
     
 api.add_resource(FavoritesResource, '/favorites')
-
 
 # Main entry point
 if __name__ == '__main__':
