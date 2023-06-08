@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import './register.css'; // Import the CSS file
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -34,10 +35,10 @@ function Register() {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="register-form" onSubmit={handleSubmit}>
+        <div className="form-group">
           <label htmlFor="username">Username:</label>
           <input
             type="text"
@@ -46,7 +47,7 @@ function Register() {
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -55,7 +56,7 @@ function Register() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -64,10 +65,11 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button class='btn' type="submit">Register</button>
+        <button className="btn" type="submit">Register</button>
       </form>
       {message && <p>{message}</p>}
     </div>
+
   );
 }
 
