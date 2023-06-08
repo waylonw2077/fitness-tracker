@@ -64,7 +64,7 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Register</button>
+        <button class='btn' type="submit">Register</button>
       </form>
       {message && <p>{message}</p>}
     </div>
