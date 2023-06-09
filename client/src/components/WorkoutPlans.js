@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import './workoutplans.css';
 
 function WorkoutPlans() {
   const [workoutPlans, setWorkoutPlans] = useState([]);
@@ -31,8 +32,10 @@ function WorkoutPlans() {
   };
 
   return (
-    <div>
-      <h2>Workout Plans</h2>
+    <div className='workout-plans-container'>
+      <div className='navbar'>
+        <h2>Workout Plans</h2>
+      </div>
       {workoutPlans.length === 0 ? (
         <p>No workout plans available.</p>
       ) : (
@@ -41,17 +44,18 @@ function WorkoutPlans() {
             <li key={plan.id}>
               <h3>{plan.title}</h3>
               <p>{plan.description}</p>
-              <button onClick={() => deleteWorkoutPlan(plan.id)}>
+              <button className='btn' onClick={() => deleteWorkoutPlan(plan.id)}>
                 Delete
               </button>
             </li>
           ))}
         </ul>
       )}
-      <div>
+      <nav className='bottom-nav'>
+        <Link to="/" className='navbar-link'>Home</Link>
         <Link to="/create-workout">Create Workout</Link>
         <Link to="/progress-tracker">Progress Tracker</Link>
-      </div>
+      </nav>
     </div>
   );
 }

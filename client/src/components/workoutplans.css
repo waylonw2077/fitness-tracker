@@ -1,0 +1,48 @@
+.workout-plans-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+}
+
+.workout-plans-container .navbar {
+    width: 100%;
+    background-color: #f2f2f2;
+    padding: 20px;
+    text-align: center;
+}
+
+.workout-plans-container .navbar h2 {
+    margin: 0;
+}
+
+.workout-plans-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.workout-plans-container ul li {
+    margin-bottom: 20px;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content:left;
+    padding: 10px;
+}
+
+.bottom-nav a {
+    margin: 0 5px;
+    padding: 5px 5px;
+}
+
+.navbar a {
+
+}
+

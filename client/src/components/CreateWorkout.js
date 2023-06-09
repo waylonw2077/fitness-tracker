@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import './createworkout.css';
 
 function CreateWorkout() {
   const [title, setTitle] = useState("");
@@ -37,10 +38,12 @@ function CreateWorkout() {
   };
 
   return (
-    <div>
-      <h2>Create Workout</h2>
+    <div className="create-workout-container">
+      <nav>
+        <h2 className='container'>Create Workout</h2>
+      </nav>
       {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
+      <form className="create-workout-form" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="title">Title:</label>
           <input
@@ -58,9 +61,13 @@ function CreateWorkout() {
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
-        <button type="submit">Create</button>
-        <Link to="/workout-plans">Back to Workout Plans</Link>
+        <button className='btn' type="submit">Create</button>
       </form>
+      <nav className="bottom-nav">
+        <Link to="/">Home</Link>
+        <Link to="/workout-plans">Workout Plans</Link>
+        <Link to="/progress-tracker">Progress Tracker</Link>
+      </nav>
     </div>
   );
 }

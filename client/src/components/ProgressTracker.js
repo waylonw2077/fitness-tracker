@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import './progresstracker.css';
 
 function ProgressTracker() {
   const [workoutProgress, setWorkoutProgress] = useState([]);
@@ -81,10 +83,10 @@ function ProgressTracker() {
   };
 
   return (
-    <div>
-      <h2>Workout Progress</h2>
+    <div className='progress-tracker-container'>
+      <h2 className='container'>Workout Progress</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form className='progress-tracker-form' onSubmit={handleSubmit}>
         <label htmlFor="exercise_id">Exercise:</label>
         <select
           id="exercise_id"
@@ -144,8 +146,13 @@ function ProgressTracker() {
           onChange={handleInputChange}
         ></textarea>
 
-        <button type="submit">Add Progress</button>
+        <button className='btn' type="submit">Add Progress</button>
       </form>
+      <nav className="bottom-nav">
+        <Link to="/">Home</Link>
+        <Link to="/workout-plans">Workout Plans</Link>
+        <Link to="/progress-tracker">Progress Tracker</Link>
+      </nav>
 
       <div>
         {workoutProgress.map((progress) => (
